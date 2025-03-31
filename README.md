@@ -31,7 +31,7 @@ A simple web application to help user track their monthly expenses and income. B
     - Shows total expenses
     - Calculates real-time balance
 
-## Safety Features 🛡️
+## Safety Features
 
 -   Prevents negative balance
 -   Requires initial budget before transactions
@@ -39,7 +39,7 @@ A simple web application to help user track their monthly expenses and income. B
 -   Amount must be greater than zero
 -   All fields are required
 
-## User Interface 🎨
+## User Interface
 
 -   Clean, modern design using Tailwind CSS
 -   Two-column layout on desktop
@@ -47,7 +47,7 @@ A simple web application to help user track their monthly expenses and income. B
 -   Clear transaction history table
 -   Easy-to-read financial summary
 
-## How to Use 📝
+## How to Use
 
 1. **Set Initial Budget**
 
@@ -68,25 +68,25 @@ A simple web application to help user track their monthly expenses and income. B
     - Monitor income and expenses
     - Review transaction history
 
-## Technical Details 🔧
+## Technical Details
 
 -   Built with vanilla JavaScript
 -   Styled with Tailwind CSS
 -   No database required (in-memory storage)
 -   Mobile-first responsive design
 
-## Installation 🚀
+## Installation
 
 1. Clone the repository
 2. Open index.html in your browser
 3. No additional installation required
 
-## Dependencies 📦
+## Dependencies
 
 -   Tailwind CSS (via CDN)
 -   No other external dependencies
 
-## Browser Support 🌐
+## Browser Support
 
 -   Chrome
 -   Firefox
@@ -94,7 +94,7 @@ A simple web application to help user track their monthly expenses and income. B
 -   Edge
 -   Other modern browsers
 
-## Future Improvements 🔮
+## Future Improvements
 
 -   Data persistence using localStorage
 -   Export transactions to CSV
