@@ -3,10 +3,49 @@
     <head>
         <title>Monthly Expense Calculator</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
+
+    <!-- Add auth check script at the top of your other scripts -->
+    <script>
+        // Initialize Supabase client
+        const supabaseUrl = "https://gqqvafqncsxbefyuxqpz.supabase.co";
+        const supabaseKey =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxcXZhZnFuY3N4YmVmeXV4cXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1ODUxMTEsImV4cCI6MjA1OTE2MTExMX0.yazw6B3Y3mp6Yc0v9Id52nWhe78tgVVP5QbT5IyVQ6c";
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        // Check authentication status
+        async function checkAuth() {
+            const {
+                data: { session },
+                error,
+            } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                // Redirect to login if not authenticated
+                window.location.href = "supabase.html";
+            }
+        }
+
+        // Check auth on page load
+        checkAuth();
+
+        // Periodically check auth status (optional)
+        setInterval(checkAuth, 60000); // Check every minute
+    </script>
     <body class="bg-gray-100">
         <div class="max-w-7xl mx-auto p-6 mt-8">
-            <h2 class="text-3xl font-bold mb-6">Monthly Expense Calculator</h2>
+            <!-- Add Logout Button -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold">Monthly Expense Calculator</h2>
+                <button
+                    id="logoutBtn"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                >
+                    Logout
+                </button>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Left Column - Budget Form and Transaction Form -->
@@ -130,8 +169,22 @@
                     </div>
                 </div>
             </div>
+            <script>
+                // Handle logout
+                document
+                    .getElementById("logoutBtn")
+                    .addEventListener("click", async () => {
+                        try {
+                            const { error } =
+                                await supabaseClient.auth.signOut();
+                            if (error) throw error;
+                            window.location.href = "supabase.html";
+                        } catch (error) {
+                            console.error("Error logging out:", error.message);
+                        }
+                    });
+            </script>
+            <script src="script.js"></script>
         </div>
-
-        <script src="script.js"></script>
     </body>
 </html>

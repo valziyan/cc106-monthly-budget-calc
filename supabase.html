@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Budget Tracker - Auth</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body class="bg-gray-100">
+        <div class="min-h-screen flex items-center justify-center">
+            <div
+                class="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md"
+            >
+                <!-- Auth Forms Container -->
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900" id="authTitle">
+                        Sign In
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600" id="authDescription">
+                        Sign in to your account to continue
+                    </p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="mt-8 space-y-6">
+                    <div class="rounded-md shadow-sm space-y-4">
+                        <div>
+                            <label for="loginEmail" class="sr-only"
+                                >Email address</label
+                            >
+                            <input
+                                id="loginEmail"
+                                name="email"
+                                type="email"
+                                required
+                                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="Email address"
+                            />
+                        </div>
+                        <div>
+                            <label for="loginPassword" class="sr-only"
+                                >Password</label
+                            >
+                            <input
+                                id="loginPassword"
+                                name="password"
+                                type="password"
+                                required
+                                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="Password"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Register Form (Hidden by default) -->
+                <form id="registerForm" class="mt-8 space-y-6 hidden">
+                    <div class="rounded-md shadow-sm space-y-4">
+                        <div>
+                            <label for="registerEmail" class="sr-only"
+                                >Email address</label
+                            >
+                            <input
+                                id="registerEmail"
+                                name="email"
+                                type="email"
+                                required
+                                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="Email address"
+                            />
+                        </div>
+                        <div>
+                            <label for="registerPassword" class="sr-only"
+                                >Password</label
+                            >
+                            <input
+                                id="registerPassword"
+                                name="password"
+                                type="password"
+                                required
+                                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="Password"
+                            />
+                        </div>
+                        <div>
+                            <label for="confirmPassword" class="sr-only"
+                                >Confirm Password</label
+                            >
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                required
+                                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="Confirm Password"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                            Register
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Toggle between login and register -->
+                <div class="text-center">
+                    <button
+                        id="toggleAuth"
+                        class="text-sm text-blue-600 hover:text-blue-500"
+                    >
+                        Create new account
+                    </button>
+                </div>
+
+                <!-- Error Message Display -->
+                <div
+                    id="errorMessage"
+                    class="hidden mt-4 text-center text-sm text-red-600"
+                ></div>
+            </div>
+        </div>
+
+        <script>
+            // Initialize Supabase client
+            const supabaseUrl = "https://gqqvafqncsxbefyuxqpz.supabase.co";
+            const supabaseKey =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxcXZhZnFuY3N4YmVmeXV4cXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1ODUxMTEsImV4cCI6MjA1OTE2MTExMX0.yazw6B3Y3mp6Yc0v9Id52nWhe78tgVVP5QbT5IyVQ6c";
+            const { createClient } = supabase;
+            const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+            // DOM Elements
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
+            const toggleButton = document.getElementById("toggleAuth");
+            const authTitle = document.getElementById("authTitle");
+            const authDescription = document.getElementById("authDescription");
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Toggle between login and register forms
+            toggleButton.addEventListener("click", () => {
+                const isLogin = loginForm.classList.contains("hidden");
+                loginForm.classList.toggle("hidden");
+                registerForm.classList.toggle("hidden");
+
+                if (isLogin) {
+                    authTitle.textContent = "Sign In";
+                    authDescription.textContent =
+                        "Sign in to your account to continue";
+                    toggleButton.textContent = "Create new account";
+                } else {
+                    authTitle.textContent = "Create Account";
+                    authDescription.textContent = "Register for a new account";
+                    toggleButton.textContent =
+                        "Already have an account? Sign in";
+                }
+
+                errorMessage.classList.add("hidden");
+            });
+
+            // Handle Login
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const email = document.getElementById("loginEmail").value;
+                const password = document.getElementById("loginPassword").value;
+
+                try {
+                    const { data, error } =
+                        await supabaseClient.auth.signInWithPassword({
+                            email: email,
+                            password: password,
+                        });
+
+                    if (error) throw error;
+
+                    // Store session data if needed
+                    localStorage.setItem(
+                        "userSession",
+                        JSON.stringify(data.session)
+                    );
+
+                    // Redirect to main app
+                    window.location.href = "index.html";
+                } catch (error) {
+                    errorMessage.textContent = error.message;
+                    errorMessage.classList.remove("hidden");
+                }
+            });
+
+            // Handle Registration
+            registerForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const email = document.getElementById("registerEmail").value;
+                const password =
+                    document.getElementById("registerPassword").value;
+                const confirmPassword =
+                    document.getElementById("confirmPassword").value;
+
+                if (password !== confirmPassword) {
+                    errorMessage.textContent = "Passwords do not match";
+                    errorMessage.classList.remove("hidden");
+                    return;
+                }
+
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (error) throw error;
+
+                    errorMessage.textContent =
+                        "Registration successful! Please check your email for verification.";
+                    errorMessage.classList.remove("hidden");
+                    errorMessage.classList.remove("text-red-600");
+                    errorMessage.classList.add("text-green-600");
+                } catch (error) {
+                    errorMessage.textContent = error.message;
+                    errorMessage.classList.remove("hidden");
+                    errorMessage.classList.add("text-red-600");
+                }
+            });
+        </script>
+    </body>
+</html>

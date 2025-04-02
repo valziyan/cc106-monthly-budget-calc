@@ -56,6 +56,7 @@ const BudgetTracker = {
     updateDisplay: function () {
         this.updateSummary();
         this.updateTransactionTable();
+        console.log(this.transactions);
     },
 
     updateSummary: function () {
@@ -124,6 +125,7 @@ const BudgetTracker = {
             amount: parseFloat(document.getElementById("amount").value),
         };
 
+        // Check if form fields has value
         if (
             !transactionData.name ||
             !transactionData.category ||
