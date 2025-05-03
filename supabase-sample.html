@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    </head>
+    <body>
+        <script>
+            // 1. Initalize the Supabase client
+            const supabaseUrl = "https://gqqvafqncsxbefyuxqpz.supabase.co";
+            const supabaseKey =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxcXZhZnFuY3N4YmVmeXV4cXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1ODUxMTEsImV4cCI6MjA1OTE2MTExMX0.yazw6B3Y3mp6Yc0v9Id52nWhe78tgVVP5QbT5IyVQ6c";
+            const { createClient } = supabase;
+            const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+            // 2. check if we are authenticated using console.log
+            console.log("supabaseClient", supabaseClient);
+
+            // 3. create a function to Inset a book record into the books table using try and catch
+            // SQL: insert into books (title, author, metadata) values ('The Great Gatsby', 'F. Scott Fitzgerald', '{"genre": "Fiction", "published_year": 1925}');
+            async function insertBook() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from("books")
+                        .insert([
+                            {
+                                title: "The Great Gatsby",
+                                author: "F. Scott Fitzgerald",
+                                metadata: {
+                                    genre: "Fiction",
+                                    published_year: 1925,
+                                },
+                            },
+                            {
+                                title: "To Kill a Mockingbird",
+                                author: "Harper Lee",
+                                metadata: {
+                                    genre: "Fiction",
+                                    published_year: 1960,
+                                },
+                            },
+                        ]);
+                } catch (error) {
+                    console.error("Error inserting book:", error);
+                }
+            }
+
+            // 4. call the insertBook function
+            // insertBook();
+
+            // 5. create a function to fetch all books from the books table
+            async function fetchBooks() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from("books")
+                        .select("*");
+                    console.log("Books:", data);
+                } catch (error) {
+                    console.error("Error fetching books:", error);
+                }
+            }
+
+            // 6. call the fetchBooks function
+            fetchBooks();
+        </script>
+    </body>
+</html>
